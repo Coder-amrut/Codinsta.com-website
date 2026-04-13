@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenges | CodInsta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            background: white;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .challenges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .challenge-card .difficulty {
+            margin-bottom: 12px;
+        }
+
+        .challenge-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+        }
+
+        .challenge-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .languages {
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-icon {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .btn-solve {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-solve:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .solved-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #dcfce7;
+            color: #166534;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 10px;
+            border: 1px solid #bbf7d0;
+            animation: badgeIn 0.3s ease-out;
+        }
+
+        @keyframes badgeIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .challenge-card.solved {
+            border-color: #bbf7d0;
+            background: #f0fdf4;
+        }
+
+        .challenge-card.solved .btn-solve {
+            background: var(--success);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* Add Question UI */
+        .admin-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .btn-add-q {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-add-q:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-add-q i {
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        textarea.form-control {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .author-info img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            object-fit: cover;
+        }
+
+        .solved-count {
+            color: var(--text-muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .solved-count i {
+            color: var(--success);
+        }
+
+        /* Language Checkbox Group */
+        .lang-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .lang-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            padding: 4px 0;
+        }
+
+        .lang-option input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        /* Toast / Notification Styling */
+        .cheat-warning {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-left: 4px solid var(--primary);
+            animation: toastSlideIn 0.3s ease-out;
+            transition: opacity 0.5s;
+        }
+
+        @keyframes toastSlideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .challenges-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-grid, .lang-options {
+                grid-template-columns: 1fr;
+            }
+            .filters {
+                flex-direction: column;
+            }
+            .filter-select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="groups.html">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="premium.html" style="color:#d97706; font-weight:700;"><i class="fas fa-crown"></i> Premium</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="login.html" class="btn-login">Login</a>
+            <a href="register.html" class="btn-register">Register</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Master Your Coding Journey</h1>
+            <p>Elevate your logical thinking and software development skills through advanced challenges, complex
+                projects, and the most comprehensive DSA learning path on CodInsta.</p>
+            <div class="social-links" style="justify-content: center;">
+                <a href="https://instagram.com/amrutt_ak" target="_blank" class="social-item"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://linkedin.com/in/amrutkiran-kshirsagar" target="_blank" class="social-item"><i
+                        class="fab fa-linkedin-in"></i></a>
+                <a href="mailto:amrutkiranskshirsagar@gmail.com" class="social-item"><i class="far fa-envelope"></i></a>
+            </div>
+        </section>
+
+        <!-- Learning Topics Section -->
+        <section class="learning-section" id="dsa-paths">
+            <h2 class="section-title"><i class="fas fa-graduation-cap"></i> DSA Learning Paths</h2>
+            <div class="learning-grid">
+                <!-- 1. Arrays & Hashing -->
+                <div class="learning-card" onclick="openDSAModal('Arrays & Hashing')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
+                        <span class="subtitle">Foundation Path</span>
+                        <h3>Arrays & Hashing</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">13</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">149</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Two Pointers -->
+                <div class="learning-card" onclick="openDSAModal('Two Pointers')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <span class="subtitle">Search & Optimize</span>
+                        <h3>Two Pointers</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">8</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">52</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Sliding Window -->
+                <div class="learning-card" onclick="openDSAModal('Sliding Window')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <span class="subtitle">Memory Efficiency</span>
+                        <h3>Sliding Window</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">6</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">38</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Stacks -->
+                <div class="learning-card" onclick="openDSAModal('Stacks')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                        <span class="subtitle">Ordered Logic</span>
+                        <h3>Stacks</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">5</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">28</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Binary Search -->
+                <div class="learning-card" onclick="openDSAModal('Binary Search')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+                        <span class="subtitle">Efficient Retrieval</span>
+                        <h3>Binary Search</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">7</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">45</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Linked Lists -->
+                <div class="learning-card" onclick="openDSAModal('Linked Lists')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);">
+                        <span class="subtitle">Dynamic Structures</span>
+                        <h3>Linked Lists</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">9</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">63</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Trees -->
+                <div class="learning-card" onclick="openDSAModal('Trees')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);">
+                        <span class="subtitle">Hierarchical Data</span>
+                        <h3>Trees</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">12</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">110</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Backtracking -->
+                <div class="learning-card" onclick="openDSAModal('Backtracking')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);">
+                        <span class="subtitle">State Space Search</span>
+                        <h3>Backtracking</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">6</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">42</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Graphs -->
+                <div class="learning-card" onclick="openDSAModal('Graphs')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">
+                        <span class="subtitle">Network Connectivity</span>
+                        <h3>Graphs</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">15</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">125</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. Dynamic Programming -->
+                <div class="learning-card" onclick="openDSAModal('Dynamic Programming')">
+                    <div class="card-header-gradient"
+                        style="background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);">
+                        <span class="subtitle">Optimal Substructure</span>
+                        <h3>Dynamic Programming</h3>
+                        <div class="play-circle"><i class="fas fa-play"></i></div>
+                    </div>
+                    <div class="card-content-stats">
+                        <div class="stat-item">
+                            <span class="val">20</span>
+                            <span class="label">Chapters</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="val">180</span>
+                            <span class="label">Items</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="percent">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        </section>
+    </div>
+
+    <script src="assets/js/dsa-data.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        let pseudoTimer;
+        let timeLeft;
+        let activeQuestionId;
+
+        // On Load, check solved questions & load custom content
+        document.addEventListener('DOMContentLoaded', () => {
+            // 2. Sync Solved Badges (only for existing challenges, not custom ones)
+            const solved = JSON.parse(localStorage.getItem('codinsta_solved')) || [];
+            // Assuming markAsSolved is now only for predefined challenges if any, or removed if no challenges on this page.
+            // For now, keeping it but it might become obsolete if no challenges are displayed here.
+            // solved.forEach(id => markAsSolved(id));
+        });
+
+        // This function is now likely obsolete if no challenges are displayed on this page.
+        // Keeping it for now, but it might be removed in a future iteration.
+        function markAsSolved(id) {
+            const card = document.getElementById('card-' + id);
+            const status = document.getElementById('status-' + id);
+            if (card && status) {
+                card.classList.add('solved');
+                status.innerHTML = `<span class="solved-badge"><i class="fas fa-check-circle"></i> SOLVED</span>`;
+                const btn = card.querySelector('.btn-solve');
+                if (btn) btn.textContent = "Solved ✓";
+            }
+        }
+
+        function openPseudoModal(title, time, id) {
+            activeQuestionId = id;
+            document.getElementById('pseudo-title').textContent = title;
+            document.getElementById('pseudo-modal').style.display = 'flex'; // Use the specific modal ID
+            document.getElementById('pseudo-text').value = '';
+
+            const [mins, secs] = time.split(':').map(Number);
+            timeLeft = mins * 60 + (secs || 0);
+            updateTimerDisplay();
+
+            clearInterval(pseudoTimer);
+            pseudoTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(pseudoTimer);
+                    alert("Time is up!");
+                    closePseudoModal();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            const timerEl = document.getElementById('pseudo-timer');
+            if (timerEl) timerEl.textContent = `${m}:${s}`;
+        }
+
+        function closePseudoModal() {
+            document.getElementById('pseudo-modal').style.display = 'none'; // Use the specific modal ID
+            clearInterval(pseudoTimer);
+        }
+
+        // openAddModal and closeAddModal are removed as per instruction
+        // saveNewQuestion is removed as per instruction
+
+        function submitPseudo() {
+            const text = document.getElementById('pseudo-text').value;
+            if (text.length < 20) {
+                alert("Please provide a more detailed pseudo code (min 20 chars).");
+                return;
+            }
+
+            if (window.showToast) showToast("Pseudo Code Submitted Successfully!", "success");
+
+            // The following logic for marking as solved and updating solvedCount for customQs is removed
+            // as custom challenges are no longer on this page.
+            // const solved = JSON.parse(localStorage.getItem('codinsta_solved')) || [];
+            // if (!solved.includes(activeQuestionId)) {
+            //     solved.push(activeQuestionId);
+            //     localStorage.setItem('codinsta_solved', JSON.stringify(solved));
+            //     markAsSolved(activeQuestionId);
+
+            //     const customQs = JSON.parse(localStorage.getItem('codinsta_custom_qs')) || [];
+            //     const qIdx = customQs.findIndex(q => q.id === activeQuestionId);
+            //     if (qIdx !== -1) {
+            //         customQs[qIdx].solvedCount = (customQs[qIdx].solvedCount || 0) + 1;
+            //         localStorage.setItem('codinsta_custom_qs', JSON.stringify(customQs));
+            //         const countSpan = document.getElementById('solved-count-' + activeQuestionId);
+            //         if (countSpan) countSpan.textContent = customQs[qIdx].solvedCount;
+            //     }
+            // }
+
+            const user = JSON.parse(localStorage.getItem('codinsta_user')) || { username: 'Guest' };
+            user.points = (user.points || 0) + 5;
+            localStorage.setItem('codinsta_user', JSON.stringify(user));
+
+        }
+
+        function openDSAModal(topic) {
+            const data = dsaData[topic];
+            if (!data) return;
+            document.getElementById('full-topic-title').textContent = topic;
+            document.getElementById('full-topic-desc').textContent = data.desc;
+            document.getElementById('full-code-1').textContent = data.code1.code || data.code1;
+            document.getElementById('full-code-2').textContent = data.code2.code || data.code2;
+            document.getElementById('full-page-topic-view').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling background
+        }
+
+        function closeDSAModal() {
+            document.getElementById('full-page-topic-view').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+
+    <!-- Pseudo Solve Modal -->
+    <div class="modal-overlay" id="pseudo-modal" style="display: none;">
+        <div class="modal">
+            <h2 id="pseudo-title">Challenge Title</h2>
+            <p style="margin-bottom: 20px; font-size: 0.9rem;">Write your logic in pseudo-code before time runs out!</p>
+            <div class="modal-timer" id="pseudo-timer">00:00</div>
+            <textarea id="pseudo-text" class="pseudo-editor"
+                placeholder="BEGIN&#10;  // Your logic here&#10;END"></textarea>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closePseudoModal()">Give Up</button>
+                <button class="btn-submit-pseudo" onclick="submitPseudo()">Submit Logic</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-Page DSA Topic View -->
+    <div class="full-page-overlay" id="full-page-topic-view">
+        <button class="btn-close-topic" onclick="closeDSAModal()">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="topic-view-container">
+            <h1 id="full-topic-title">Arrays & Hashing</h1>
+
+            <div class="topic-stats-row">
+                <div class="topic-stat-box">
+                    <i class="fas fa-book-open"></i>
+                    <span>Premium Study Guide</span>
+                </div>
+                <div class="topic-stat-box">
+                    <i class="fas fa-check-circle"></i>
+                    <span>2 Solved Examples</span>
+                </div>
+                <div class="topic-stat-box">
+                    <i class="fas fa-clock"></i>
+                    <span>Est. 45 mins</span>
+                </div>
+            </div>
+
+            <div id="full-topic-desc" class="topic-info-content">
+                Topic description goes here.
+            </div>
+
+            <h2 style="margin-bottom: 20px; font-size: 1.5rem; color: #1e293b;">
+                <i class="fas fa-lightbulb" style="color: #f59e0b; margin-right: 10px;"></i> Master Solve: Example 1
+            </h2>
+            <pre class="solution-code" id="full-code-1"></pre>
+
+            <h2 style="margin-bottom: 20px; font-size: 1.5rem; color: #1e293b;">
+                <i class="fas fa-rocket" style="color: #3b82f6; margin-right: 10px;"></i> Optimized Logic: Example 2
+            </h2>
+            <pre class="solution-code" id="full-code-2"></pre>
+
+            <div style="text-align: center; margin-top: 80px; padding: 40px; background: #f8fafc; border-radius: 30px;">
+                <h3 style="margin-bottom: 10px;">Ready to test your logic?</h3>
+                <p style="color: var(--text-muted); margin-bottom: 25px;">Check out related challenges in the missions
+                    center.</p>
+                <a href="challenges.html" class="btn-register" style="padding: 15px 40px; display: inline-block;">Go to
+                    Challenges</a>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fas fa-code"></i>
+                        CodInsta<span>.com</span>
+                    </div>
+                    <p>India's premier logical coding platform. Empowering developers to crack the world's toughest
+                        technical interviews with precision and speed.</p>
+                    <div class="social-links">
+                        <a href="https://instagram.com/amrutt_ak" target="_blank" class="social-item"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://linkedin.com/in/amrutkiran-kshirsagar" target="_blank" class="social-item"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="mailto:amrutkiranskshirsagar@gmail.com" class="social-item"><i
+                                class="far fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Problem Set</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Editorials</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Discussion</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Tutorials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Use</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodInsta - All Rights Reserved.</p>
+                <div class="developer-country">
+                    <span>Developed in</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="India"
+                        class="flag">
+                    <span>India</span>
+                </div>
+                <p>Created by <strong>Amrutkiran Kshirsagar</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyCb55Qjf5c8PPJyXTs6hHwl2R12Ah0MAck",
+            authDomain: "codinsta-6f27d.firebaseapp.com",
+            databaseURL: "https://codinsta-6f27d-default-rtdb.firebaseio.com",
+            projectId: "codinsta-6f27d",
+            storageBucket: "codinsta-6f27d.firebasestorage.app",
+            messagingSenderId: "791631594202",
+            appId: "1:791631594202:web:d0351251c306c361ae5be3",
+            measurementId: "G-V9LKX8CKK1"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        
+        // Initialize Firestore and Auth
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        // Make Firebase services globally available
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+        window.firebaseApp = app;
+    </script>
+</body>
+
+</html>

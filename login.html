@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding-top: 0;
+            /* Override global padding for centring */
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .auth-card {
+            padding: 40px;
+        }
+
+        .auth-card h2 {
+            margin-bottom: 8px;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .auth-card p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            background: var(--primary-hover);
+        }
+
+        .error-msg {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <div class="auth-btns">
+            <a href="register.html" class="btn-register">Get Started</a>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="card auth-card">
+            <h2>Welcome Back</h2>
+            <p>Login to continue your coding journey.</p>
+
+            <div id="error-box" class="error-msg">
+                <i class="fas fa-circle-exclamation"></i> Invalid credentials. Please try again.
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Email or Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input type="text" placeholder="name@example.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                        <i class="fas fa-eye toggle-password" id="toggle-pw"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth">Login to CodInsta</button>
+            </form>
+
+            <div class="auth-footer">
+                Don't have an account? <a href="register.html">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    
+    <!-- Firebase Initialization -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCb55Qjf5c8PPJyXTs6hHwl2R12Ah0MAck",
+            authDomain: "codinsta-6f27d.firebaseapp.com",
+            databaseURL: "https://codinsta-6f27d-default-rtdb.firebaseio.com",
+            projectId: "codinsta-6f27d",
+            storageBucket: "codinsta-6f27d.firebasestorage.app",
+            messagingSenderId: "791631594202",
+            appId: "1:791631594202:web:d0351251c306c361ae5be3",
+            measurementId: "G-V9LKX8CKK1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+        window.firebaseApp = app;
+    </script>
+    
+    <script type="module">
+        // Import Firebase Auth functions
+        import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+        // Password toggle logic
+        const togglePw = document.getElementById('toggle-pw');
+        const passwordInput = document.getElementById('password');
+
+        togglePw.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePw.classList.toggle('fa-eye');
+            togglePw.classList.toggle('fa-eye-slash');
+        });
+
+        // Firebase Authentication
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorBox = document.getElementById('error-box');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            const email = e.target.querySelector('input[type="email"]').value;
+            const password = e.target.querySelector('input[type="password"]').value;
+
+            if (!email || !password) {
+                errorBox.textContent = 'Please fill in all fields';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            // Show loading state
+            submitBtn.textContent = 'Signing in...';
+            submitBtn.disabled = true;
+            errorBox.style.display = 'none';
+
+            try {
+                // Sign in with Firebase Auth
+                const userCredential = await signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                const user = userCredential.user;
+
+                // Get user data from Firestore
+                const userData = await window.FirebaseDB.getUser(user.email.split('@')[0]);
+
+                if (userData) {
+                    // Save to localStorage for session management
+                    localStorage.setItem('codinsta_user', JSON.stringify({
+                        username: userData.username,
+                        email: userData.email,
+                        points: userData.points || 0,
+                        solved: userData.solved || 0,
+                        uid: user.uid
+                    }));
+
+                    window.showToast('Login successful!', 'success');
+                    window.location.href = 'index.html';
+                } else {
+                    throw new Error('User data not found');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                let errorMessage = 'Login failed. Please try again.';
+
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'No account found with this email.';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Incorrect password.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address.';
+                }
+
+                errorBox.textContent = errorMessage;
+                errorBox.style.display = 'block';
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

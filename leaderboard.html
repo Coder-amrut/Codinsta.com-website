@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin-top: 20px;
+        }
+
+        .leaderboard-table th {
+            text-align: left;
+            padding: 15px 25px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .leaderboard-row {
+            background: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .leaderboard-row:hover {
+            transform: scale(1.01);
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        .leaderboard-row td {
+            padding: 18px 25px;
+            vertical-align: middle;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leaderboard-row td:first-child {
+            border-left: 1px solid var(--border);
+            border-radius: 12px 0 0 12px;
+            width: 100px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .leaderboard-row td:last-child {
+            border-right: 1px solid var(--border);
+            border-radius: 0 12px 12px 0;
+            text-align: right;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .rank-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+        }
+
+        .top-1 {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #fbbf24;
+        }
+
+        .top-2 {
+            background: #f1f5f9;
+            color: #475569;
+            border: 2px solid #cbd5e1;
+        }
+
+        .top-3 {
+            background: #ffedd5;
+            color: #9a3412;
+            border: 2px solid #fdba74;
+        }
+
+        .top-3-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 900px) {
+            .top-3-container {
+                grid-template-columns: 1fr;
+            }
+            .top-card.silver, .top-card.bronze {
+                height: auto;
+            }
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .top-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .top-card.gold {
+            border-top: 5px solid #fbbf24;
+        }
+
+        .top-card.silver {
+            border-top: 5px solid #cbd5e1;
+            height: 90%;
+            margin-top: auto;
+        }
+
+        .top-card.bronze {
+            border-top: 5px solid #fdba74;
+            height: 85%;
+            margin-top: auto;
+        }
+
+        .crown {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: #fbbf24;
+        }
+
+        .top-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid white;
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html" class="active">Leaderboard</a>
+            <a href="groups.html">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="premium.html" style="color:#d97706; font-weight:700;"><i class="fas fa-crown"></i> Premium</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="login.html" class="btn-login">Login</a>
+            <a href="register.html" class="btn-register">Register</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Global Leaderboard</h1>
+            <p style="color: var(--text-muted)">The brightest minds on CodInsta this week.</p>
+        </div>
+
+        <div class="top-3-container">
+            <div class="top-card silver">
+                <img src="https://i.pravatar.cc/80?u=silver" class="top-avatar">
+                <h3>@dev_maverick</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">2,840 Points</p>
+                <div style="margin-top: 10px; font-weight: 700; color: #475569;">#2 Rank</div>
+            </div>
+            <div class="top-card gold">
+                <i class="fas fa-crown crown"></i>
+                <img src="https://i.pravatar.cc/100?u=gold" class="top-avatar" style="width: 100px; height: 100px;">
+                <h2 style="font-size: 1.5rem;">@aryancode</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">3,120 Points</p>
+                <div style="margin-top: 10px; font-weight: 700; color: #fbbf24; font-size: 1.2rem;">#1 Grandmaster</div>
+            </div>
+            <div class="top-card bronze">
+                <img src="https://i.pravatar.cc/80?u=bronze" class="top-avatar">
+                <h3>@code_ninja</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">2,450 Points</p>
+                <div style="margin-top: 10px; font-weight: 700; color: #9a3412;">#3 Rank</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>Solving Time</th>
+                    <th>Total Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="leaderboard-row">
+                    <td>#4</td>
+                    <td>
+                        <div class="user-cell">
+                            <img src="https://i.pravatar.cc/40?u=u4" class="user-img">
+                            <div>
+                                <div style="font-weight: 600;">Sarah Chen</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">@schen_codes</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>14m avg</td>
+                    <td>2,100 pts</td>
+                </tr>
+                <tr class="leaderboard-row">
+                    <td>#5</td>
+                    <td>
+                        <div class="user-cell">
+                            <img src="https://i.pravatar.cc/40?u=u5" class="user-img">
+                            <div>
+                                <div style="font-weight: 600;">Rahul Verma</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">@verma_007</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>16m avg</td>
+                    <td>1,980 pts</td>
+                </tr>
+                <!-- More rows -->
+                <tr class="leaderboard-row">
+                    <td>#6</td>
+                    <td>
+                        <div class="user-cell">
+                            <img src="https://i.pravatar.cc/40?u=u6" class="user-img">
+                            <div>
+                                <div style="font-weight: 600;">Jessica Lee</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">@jlee_io</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>18m avg</td>
+                    <td>1,850 pts</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

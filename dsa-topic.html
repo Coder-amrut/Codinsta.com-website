@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Details | CodInsta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .topic-page {
+            padding-top: 120px;
+            padding-bottom: 80px;
+        }
+
+        .back-nav {
+            margin-bottom: 40px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            transition: all 0.3s;
+            background: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 12px;
+        }
+
+        .btn-back:hover {
+            color: var(--primary);
+            background: #e2e8f0;
+            transform: translateX(-5px);
+        }
+
+        .topic-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .topic-icon-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-title-area h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .topic-title-area p {
+            font-size: 1.25rem;
+            color: #64748b;
+            max-width: 800px;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .info-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1e293b;
+        }
+
+        .info-card h2 i {
+            color: var(--primary);
+        }
+
+        .complexity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .comp-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .comp-item span {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .comp-item strong {
+            font-size: 1.1rem;
+            color: #1e293b;
+        }
+
+        .concept-list {
+            list-style: none;
+        }
+
+        .concept-list li {
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .concept-list li i {
+            color: #10b981;
+        }
+
+        .code-solutions {
+            margin-top: 60px;
+        }
+
+        .solution-card {
+            margin-bottom: 40px;
+        }
+
+        .solution-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .practice-links .btn-practice {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 25px;
+            background: #f8fafc;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            color: #1e293b;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid #f1f5f9;
+        }
+
+        .practice-links .btn-practice:hover {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .practice-links .btn-practice i {
+            opacity: 0.5;
+        }
+
+        /* ========== PREMIUM PAYWALL ========== */
+        .premium-locked-content {
+            position: relative;
+            overflow: hidden;
+            max-height: 600px; /* Limits to ~50% of content */
+        }
+        .premium-locked-content::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 80%);
+            z-index: 5;
+        }
+        .premium-overlay-box {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            text-align: center;
+            border: 2px solid #FFD700;
+            width: 90%;
+            max-width: 500px;
+        }
+        .premium-overlay-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+        .premium-overlay-box p {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .btn-upgrade-overlay {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700, #F59E0B);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-upgrade-overlay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        @media (max-width: 900px) {
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+            .topic-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            .complexity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="groups.html">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="premium.html" style="color:#d97706; font-weight:700;"><i class="fas fa-crown"></i> Premium</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="login.html" class="btn-login">Login</a>
+            <a href="register.html" class="btn-register">Register</a>
+        </div>
+    </header>
+
+    <main class="topic-page">
+        <div class="container">
+            <div class="back-nav">
+                <a href="index.html" class="btn-back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Roadmap
+                </a>
+            </div>
+
+            <div class="topic-header" id="topic-header">
+                <div class="topic-icon-large" id="topic-icon">
+                    <i class="fas fa-th"></i>
+                </div>
+                <div class="topic-title-area">
+                    <h1 id="page-title">Topic Title</h1>
+                    <p id="page-desc">High-level description of the topic goes here.</p>
+                </div>
+            </div>
+
+            <div class="topic-grid">
+                <div class="main-content" id="topic-main-content">
+                    <div class="info-card">
+                        <h2><i class="fas fa-info-circle"></i> Overview</h2>
+                        <p id="details-overview" style="line-height: 1.8; color: #475569; font-size: 1.1rem;">
+                            Detailed overview content...
+                        </p>
+                    </div>
+
+                    <div class="code-solutions">
+                        <h2 class="section-title"><i class="fas fa-code"></i> Master Solutions</h2>
+
+                        <div class="solution-card">
+                            <h3 id="solution-1-title">Example 1: Title</h3>
+                            <pre class="solution-code" id="solution-1-code">
+// Code snippet 1
+                            </pre>
+                        </div>
+
+                        <div class="solution-card">
+                            <h3 id="solution-2-title">Example 2: Title</h3>
+                            <pre class="solution-code" id="solution-2-code">
+// Code snippet 2
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="info-card">
+                        <h2><i class="fas fa-bolt"></i> Complexity</h2>
+                        <div class="complexity-grid">
+                            <div class="comp-item">
+                                <span>Time Complexity</span>
+                                <strong id="time-comp">O(N)</strong>
+                            </div>
+                            <div class="comp-item">
+                                <span>Space Complexity</span>
+                                <strong id="space-comp">O(1)</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h2><i class="fas fa-list-ul"></i> Key Concepts</h2>
+                        <ul class="concept-list" id="concept-list">
+                            <li><i class="fas fa-check"></i> Concept 1</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h2><i class="fas fa-globe"></i> Real-world Apps</h2>
+                        <p id="real-world-desc" style="font-size: 0.95rem; color: #475569; line-height: 1.6;">
+                            Applications go here...
+                        </p>
+                    </div>
+
+                    <div class="info-card">
+                        <h2><i class="fas fa-laptop-code"></i> Practice</h2>
+                        <div class="practice-links">
+                            <a href="#" class="btn-practice">
+                                <span>Standard Practice</span>
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                            <a href="#" class="btn-practice">
+                                <span>Advanced Challenge</span>
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fas fa-code"></i>
+                        CodInsta<span>.com</span>
+                    </div>
+                    <p>India's premier logical coding platform. Empowering developers to crack the world's toughest
+                        technical interviews with precision and speed.</p>
+                    <div class="social-links">
+                        <a href="https://instagram.com/amrutt_ak" target="_blank" class="social-item"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://linkedin.com/in/amrutkiran-kshirsagar" target="_blank" class="social-item"><i
+                                class="fab fa-linkedin-in"></i></a>
+                        <a href="mailto:amrutkiranskshirsagar@gmail.com" class="social-item"><i
+                                class="far fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Problem Set</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Editorials</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Discussion</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Tutorials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Use</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodInsta - All Rights Reserved.</p>
+                <div class="developer-country">
+                    <span>Developed in</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg" alt="India"
+                        class="flag">
+                    <span>India</span>
+                </div>
+                <p>Created by <strong>Amrutkiran Kshirsagar</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/dsa-data.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const topicName = urlParams.get('topic');
+
+            if (!topicName || !dsaData[topicName]) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const data = dsaData[topicName];
+
+            // Update UI
+            document.title = `${topicName} | CodInsta`;
+            document.getElementById('page-title').innerText = topicName;
+            document.getElementById('page-desc').innerText = data.desc;
+            document.getElementById('details-overview').innerText = data.overview;
+            document.getElementById('real-world-desc').innerText = data.realWorld;
+
+            const iconContainer = document.getElementById('topic-icon');
+            iconContainer.innerHTML = `<i class="${data.icon}"></i>`;
+            iconContainer.style.background = data.color;
+
+            // Complexity
+            document.getElementById('time-comp').innerText = data.complexity.time;
+            document.getElementById('space-comp').innerText = data.complexity.space;
+
+            // Concepts
+            const conceptList = document.getElementById('concept-list');
+            conceptList.innerHTML = '';
+            data.concepts.forEach(concept => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-check-circle"></i> ${concept}`;
+                conceptList.appendChild(li);
+            });
+
+            // Solutions
+            document.getElementById('solution-1-title').innerText = data.code1.title;
+            document.getElementById('solution-1-code').innerText = data.code1.code;
+            document.getElementById('solution-2-title').innerText = data.code2.title;
+            document.getElementById('solution-2-code').innerText = data.code2.code;
+
+            // Premium Paywall Logic (Limits notes to 50% for free users)
+            const isPremium = localStorage.getItem('codinsta_premium') === 'true';
+            if (!isPremium) {
+                const mainContent = document.getElementById('topic-main-content');
+                mainContent.classList.add('premium-locked-content');
+                
+                // Inject the Premium Popup inside the restricted area
+                mainContent.insertAdjacentHTML('beforeend', `
+                    <div class="premium-overlay-box">
+                        <i class="fas fa-gem" style="color: #FFD700; font-size: 3rem; margin-bottom: 20px;"></i>
+                        <h3>Unlock Full Topic Notes</h3>
+                        <p>You have reached the 50% limit for free users. Upgrade to Premium to unlock the rest of the overview, all master solutions, and real-world application data!</p>
+                        <button onclick="window.location.href='premium.html'" class="btn-upgrade-overlay">Take Premium</button>
+                        <p style="margin-top: 15px; font-size: 0.8rem; color: #94a3b8; margin-bottom: 0;">Cancel anytime. 7-day money-back guarantee.</p>
+                    </div>
+                `);
+
+                // Masking the sidebar practice links mildly
+                const practiceLinks = document.querySelector('.practice-links');
+                if(practiceLinks) {
+                    practiceLinks.innerHTML += `<div style="text-align:center; font-size:0.8rem; color:var(--danger); margin-top:10px; font-weight:600;"><i class="fas fa-lock"></i> Premium required to submit test</div>`;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

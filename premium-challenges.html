@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Challenges | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .vault-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .vault-title h1 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .vault-title h1 i {
+            color: #FFD700;
+        }
+
+        .premium-chb-card {
+            background: linear-gradient(to right bottom, #ffffff, #fafafa);
+            border: 1px solid #FFD700;
+            border-left: 5px solid #FFD700;
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.05);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .premium-chb-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.15);
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #1e293b;
+            color: #FFD700;
+            padding: 5px 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .company-tags {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .company-tag {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .btn-solve-premium {
+            background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+            color: #000;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-top: 20px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-solve-premium:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="groups.html">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="premium-hub.html" class="active" style="color:#d97706; font-weight:700;"><i class="fas fa-crown"></i> Hub</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="premium-hub.html" class="btn-login"><i class="fas fa-arrow-left"></i> Hub</a>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 50px;">
+        <div class="vault-header">
+            <div class="vault-title">
+                <h1><i class="fas fa-gem"></i> The Elite Vault</h1>
+                <p style="color: var(--text-muted); margin-top:5px; font-size: 1.1rem;">High-frequency interview questions exclusively for premium members.</p>
+            </div>
+            <div>
+                <a href="challenges.html" class="btn-register" style="background: #1e293b;"><i class="fas fa-plus"></i> Create Private Mission</a>
+            </div>
+        </div>
+
+        <div class="challenges-list">
+            <div class="premium-chb-card">
+                <div class="premium-badge"><i class="fas fa-crown"></i> Elite Only</div>
+                <h3 style="font-size: 1.6rem; color: #1e293b; margin-bottom: 10px;">Serialize and Deserialize Binary Tree</h3>
+                <p style="color: var(--text-muted); max-width: 800px; line-height: 1.6;">Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
+                <div class="company-tags">
+                    <span class="company-tag"><i class="fab fa-google"></i> Google</span>
+                    <span class="company-tag"><i class="fab fa-amazon"></i> Amazon</span>
+                    <span class="company-tag"><i class="fab fa-facebook"></i> Meta</span>
+                </div>
+                <a href="#" class="btn-solve-premium" onclick="alert('Starting Premium Editor...')">Solve Challenge</a>
+            </div>
+
+            <div class="premium-chb-card">
+                <div class="premium-badge"><i class="fas fa-crown"></i> Elite Only</div>
+                <h3 style="font-size: 1.6rem; color: #1e293b; margin-bottom: 10px;">Alien Dictionary</h3>
+                <p style="color: var(--text-muted); max-width: 800px; line-height: 1.6;">There is a new alien language that uses the English alphabet. However, the order among the letters is unknown to you. You are given a list of strings words from the alien language's dictionary, where the strings in words are sorted lexicographically by the rules of this new language.</p>
+                <div class="company-tags">
+                    <span class="company-tag"><i class="fab fa-apple"></i> Apple</span>
+                    <span class="company-tag"><i class="fas fa-building"></i> Bloomberg</span>
+                </div>
+                <a href="#" class="btn-solve-premium" onclick="alert('Starting Premium Editor...')">Solve Challenge</a>
+            </div>
+
+            <div class="premium-chb-card">
+                <div class="premium-badge"><i class="fas fa-crown"></i> Elite Only</div>
+                <h3 style="font-size: 1.6rem; color: #1e293b; margin-bottom: 10px;">Regular Expression Matching</h3>
+                <p style="color: var(--text-muted); max-width: 800px; line-height: 1.6;">Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where: '.' Matches any single character. '*' Matches zero or more of the preceding element.</p>
+                <div class="company-tags">
+                    <span class="company-tag"><i class="fab fa-microsoft"></i> Microsoft</span>
+                    <span class="company-tag"><i class="fab fa-google"></i> Google</span>
+                </div>
+                <a href="#" class="btn-solve-premium" onclick="alert('Starting Premium Editor...')">Solve Challenge</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

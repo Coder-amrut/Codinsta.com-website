@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groups | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .groups-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .groups-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .group-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .group-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .group-item.active {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .group-icon {
+            width: 50px;
+            height: 50px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .group-item.active .group-icon {
+            background: var(--primary);
+            color: white;
+        }
+
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .tab-btn {
+            background: none;
+            padding: 10px 5px;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .member-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .member-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .member-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .btn-create-group {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            align-items: center;
+        }
+
+        /* Modal Base */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-card h3 {
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .modal-card label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .modal-card input,
+        .modal-card textarea,
+        .modal-card select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #f1f5f9;
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .btn-confirm {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        .question-number {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="groups.html" class="active">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="premium.html" style="color:#d97706; font-weight:700;"><i class="fas fa-crown"></i> Premium</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="login.html" class="btn-register">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="groups-layout">
+            <!-- Left: Groups List -->
+            <aside>
+                <div class="section-title">Your Groups</div>
+                <div class="group-list" id="sidebar-group-list">
+                    <!-- Dynamic -->
+                </div>
+                <button class="btn-create-group btn-animate" onclick="openModal('create-group-modal')">
+                    <i class="fas fa-plus"></i> [Create New Group]
+                </button>
+            </aside>
+
+            <!-- Right: Group Dashboard -->
+            <main>
+                <div class="card" id="group-dashboard">
+                    <div class="group-header">
+                        <div>
+                            <h2 id="display-group-name" style="font-size: 1.8rem;">Select a Group</h2>
+                            <p id="display-group-desc" style="color: var(--text-muted)">Welcome to CodInsta Groups.</p>
+                            <div style="margin-top: 8px;">
+                                <span id="display-group-id" class="group-id-display">ID: #000000</span>
+                            </div>
+                        </div>
+                        <div id="display-group-badge" class="badge badge-public">Public</div>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn" id="tab-members" onclick="switchTab('members')">Members</button>
+                        <button class="tab-btn" id="tab-challenges"
+                            onclick="switchTab('challenges')">Challenges</button>
+                        <button class="tab-btn" id="tab-requests" onclick="switchTab('requests')">Requests <span
+                                id="request-count"
+                                style="background: var(--danger); color: white; border-radius: 10px; padding: 2px 6px; font-size: 0.7rem;">0</span></button>
+                        <button class="settings-btn" id="settings-trigger" onclick="switchTab('settings')"
+                            style="margin-left: auto;"><i class="fas fa-cog" title="Group Settings"></i></button>
+                    </div>
+
+                    <div id="tab-content">
+                        <!-- Content injected by JS -->
+                    </div>
+
+                    <div id="admin-actions-bar" class="admin-only-ui" style="display:none;">
+                        <!-- Buttons injected by switchTab -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Create Group Modal -->
+    <div id="create-group-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>[Create New Group]</h3>
+            <label>Group Name</label>
+            <input type="text" id="cn-name" placeholder="Enter group name">
+            <label>Privacy</label>
+            <select id="cn-privacy" onchange="toggleIdGen(this.value)">
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+            </select>
+            <div id="id-gen-container" style="display:none;">
+                <label>Generated Unique ID</label>
+                <input type="text" id="cn-id" readonly>
+            </div>
+            <div class="action-row">
+                <button class="btn-cancel" onclick="closeModal('create-group-modal')">Cancel</button>
+                <button class="btn-confirm" onclick="onCreateGroup()">Create Group</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div id="add-task-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="task-modal-title">Add Group Challenge</h3>
+            <input type="hidden" id="edit-task-idx">
+            <label>Title</label>
+            <input type="text" id="task-title" placeholder="Problem title">
+            <label>Description</label>
+            <textarea id="task-desc" placeholder="Describe the problem..."></textarea>
+            <label>Duration (Minutes)</label>
+            <input type="number" id="task-timer" placeholder="60">
+            <div class="action-row">
+                <button class="btn-cancel" onclick="closeModal('add-task-modal')">Cancel</button>
+                <button class="btn-confirm" id="btn-save-task" onclick="saveTask()">Post Challenge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solver Status Modal -->
+    <div id="status-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="status-title">Question Status</h3>
+            <div id="status-content"></div>
+            <div class="action-row">
+                <button class="btn-cancel" onclick="closeModal('status-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pseudo Code Solve Modal -->
+    <div id="solve-modal" class="modal-overlay">
+        <div class="modal-card" style="width: 600px;">
+            <h3>Solve Challenge: <span id="solve-task-name"></span></h3>
+            <div class="solve-timer-container">
+                <div class="solve-timer-display">
+                    <i class="fas fa-hourglass-half"></i> <span id="solving-timer-text">00:00</span>
+                </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Write your pseudo code logic
+                below. Copy/Paste is disabled.</p>
+            <input type="hidden" id="solve-task-idx">
+            <textarea id="pseudo-input" class="pseudo-editor" placeholder="Write your logic here...
+e.g. For each element in list:
+      If element > max:
+        max = element"></textarea>
+            <div class="action-row">
+                <button class="btn-cancel" onclick="cancelSolve()">Cancel</button>
+                <button class="btn-confirm" onclick="submitPseudoCode()">Submit Solution</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div id="invite-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Invite Member</h3>
+            <label>Generate Invite Link</label>
+            <div class="invite-link-box">
+                <span id="invite-link-text"></span>
+                <button class="copy-btn" onclick="copyInvite()">Copy</button>
+            </div>
+            <label>Email or Username</label>
+            <input type="text" id="invite-input" placeholder="Enter details">
+            <div class="action-row">
+                <button class="btn-cancel" onclick="closeModal('invite-modal')">Close</button>
+                <button class="btn-confirm" onclick="onInvite()">Send Invite</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Settings Modal -->
+    <div id="edit-group-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Group Settings (Admin)</h3>
+            <label>Change Name</label>
+            <input type="text" id="edit-name">
+            <label>Group Description</label>
+            <textarea id="edit-desc"></textarea>
+            <div class="action-row">
+                <button class="btn-cancel" onclick="closeModal('edit-group-modal')">Cancel</button>
+                <button class="btn-confirm" onclick="onSaveSettings()">Update Group</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Persistence Logic
+        const STORAGE_KEY = 'codinsta_groups_data';
+
+        const defaultGroups = {
+            'Algorithm Masters': {
+                id: 'ALG-MAST',
+                desc: 'A private group for competitive programming prep.',
+                privacy: 'public',
+                members: [
+                    { name: 'Aryan', role: 'admin', points: 3120 },
+                    { name: 'Jane Doe', role: 'member', points: 450 },
+                    { name: 'Sarah Chen', role: 'member', points: 2100 },
+                    { name: 'Mike Ross', role: 'member', points: 1200 }
+                ],
+                challenges: [
+                    { title: 'Reverse Linked List', desc: 'Reverse a singly linked list efficiently.', timer: '60:00', solved: ['Jane Doe', 'Aryan'], timestamp: '2026-03-07T10:30:00.000Z' },
+                    { title: 'Three Sum Problem', desc: 'Find all unique triplets in the array which gives the sum of zero.', timer: '45:00', solved: [], timestamp: '2026-03-07T14:20:00.000Z' },
+                    { title: 'Merge Intervals', desc: 'Merge all overlapping intervals.', timer: '30:00', solved: [], timestamp: '2026-03-07T16:45:00.000Z' },
+                    { title: 'Valid Parentheses', desc: 'Determine if the input string is valid.', timer: '15:00', solved: ['Aryan'], timestamp: '2026-03-08T09:15:00.000Z' },
+                    { title: 'Maximum Subarray', desc: 'Find the contiguous subarray with the largest sum.', timer: '20:00', solved: [], timestamp: '2026-03-08T11:00:00.000Z' },
+                    { title: 'Longest Palindrome', desc: 'Find the longest palindromic substring.', timer: '40:00', solved: [], timestamp: '2026-03-08T12:30:00.000Z' },
+                    { title: 'Jump Game', desc: 'Determine if you are able to reach the last index.', timer: '25:00', solved: [], timestamp: '2026-03-08T13:45:00.000Z' }
+                ],
+                requests: [
+                    { name: 'Harvey S.', points: 2800 },
+                    { name: 'Donna P.', points: 1500 }
+                ]
+            }
+        };
+
+        let groups = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultGroups;
+
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(groups));
+        }
+
+        let activeGroupName = 'Algorithm Masters';
+        let solvingTimerInterval = null;
+
+        function openModal(id) {
+            if (id === 'create-group-modal') {
+                document.getElementById('cn-id').value = Math.random().toString(36).substr(2, 8).toUpperCase();
+            }
+            if (id === 'invite-modal') {
+                document.getElementById('invite-link-text').textContent = `https://codinsta.com/join/${groups[activeGroupName].id}`;
+            }
+            if (id === 'add-task-modal') {
+                document.getElementById('task-modal-title').textContent = "Add Group Challenge";
+                document.getElementById('edit-task-idx').value = "";
+                document.getElementById('task-title').value = "";
+                document.getElementById('task-desc').value = "";
+                document.getElementById('task-timer').value = "60";
+                document.getElementById('btn-save-task').textContent = "Post Challenge";
+            }
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+            if (id === 'solve-modal') {
+                clearInterval(solvingTimerInterval);
+            }
+        }
+
+        function toggleIdGen(val) {
+            document.getElementById('id-gen-container').style.display = (val === 'private' ? 'block' : 'none');
+        }
+
+        function copyInvite() {
+            navigator.clipboard.writeText(document.getElementById('invite-link-text').textContent);
+            showToast("Link Copied!", "success");
+        }
+
+        function onCreateGroup() {
+            const name = document.getElementById('cn-name').value;
+            if (!name) return alert("Name required");
+            groups[name] = { id: document.getElementById('cn-id').value, desc: "A new group.", privacy: document.getElementById('cn-privacy').value, members: [{ name: 'Aryan', role: 'admin', points: 3120 }], challenges: [], requests: [] };
+            saveToStorage();
+            renderSidebar(); selectGroup(name); closeModal('create-group-modal');
+        }
+
+        function renderSidebar() {
+            const container = document.getElementById('sidebar-group-list');
+            container.innerHTML = Object.keys(groups).map(name => `
+                <div class="group-item card ${name === activeGroupName ? 'active' : ''}" onclick="selectGroup('${name}')">
+                    <div class="group-icon"><i class="fas fa-users"></i></div>
+                    <div><div style="font-weight: 600;">${name}</div></div>
+                </div>`).join('');
+        }
+
+        function selectGroup(name) {
+            activeGroupName = name;
+            const group = groups[name];
+            document.getElementById('display-group-name').textContent = name;
+            document.getElementById('display-group-desc').textContent = group.desc;
+            document.getElementById('display-group-id').textContent = "ID: #" + group.id;
+            document.getElementById('request-count').textContent = group.requests.length;
+            renderSidebar();
+            switchTab('members');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab)?.classList.add('active');
+            const content = document.getElementById('tab-content');
+            const adminBar = document.getElementById('admin-actions-bar');
+            const group = groups[activeGroupName];
+
+            adminBar.style.display = 'none';
+
+            if (tab === 'members') {
+                content.innerHTML = group.members.map(m => `
+                    <div class="member-row">
+                        <div class="member-info">
+                            <img src="https://i.pravatar.cc/32?u=${m.name}" class="member-img">
+                            <div><div style="font-weight:600;">${m.name} ${m.role === 'admin' ? '<span class="badge badge-public" style="font-size:0.6rem">Admin</span>' : ''}</div></div>
+                        </div>
+                        ${m.name !== 'Aryan' ? `
+                        <div class="dropdown">
+                            <button class="dropbtn"><i class="fas fa-ellipsis-v"></i></button>
+                            <div class="dropdown-content">
+                                <a onclick="makeAdmin('${m.name}')"><i class="fas fa-crown"></i> Make Admin</a>
+                                <a class="danger" onclick="removeMember('${m.name}')"><i class="fas fa-user-minus"></i> Remove Student</a>
+                            </div>
+                        </div>` : ''}
+                    </div>`).join('');
+                adminBar.innerHTML = `<div class="admin-controls"><button class="btn-invite-unique" onclick="openModal('invite-modal')"><i class="fas fa-user-plus"></i> Invite User</button></div>`;
+                adminBar.style.display = 'flex';
+            } else if (tab === 'challenges') {
+                if (!group.challenges.length) {
+                    content.innerHTML = '<p style="text-align:center; padding:20px; color:var(--text-muted)">No challenges yet.</p>';
+                } else {
+                    // Sort challenges by timestamp (newest first)
+                    const sortedChallenges = [...group.challenges]
+                        .map((c, originalIdx) => ({ ...c, originalIdx }))
+                        .sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+
+                    let html = '';
+                    let lastDateLabel = null;
+
+                    sortedChallenges.forEach((c) => {
+                        const dateObj = new Date(c.timestamp || Date.now());
+                        const dateLabel = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                        const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+                        if (dateLabel !== lastDateLabel) {
+                            html += `<div class="date-separator"><span>${dateLabel}</span></div>`;
+                            lastDateLabel = dateLabel;
+                        }
+
+                        const isSolved = c.solved.includes('Aryan');
+                        const solvedList = group.members.filter(m => c.solved.includes(m.name));
+                        const unsolvedList = group.members.filter(m => !c.solved.includes(m.name));
+
+                        html += `
+                        <div class="card" style="margin-bottom:15px; border-left:4px solid ${isSolved ? 'var(--success)' : 'var(--primary)'}">
+                            <div style="display:flex; justify-content:space-between; align-items:center">
+                                <div>
+                                    <span class="question-number">Q${c.originalIdx + 1}</span>
+                                    <span style="font-weight:700">${c.title}</span>
+                                    ${isSolved ? '<span class="solved-badge"><i class="fas fa-check"></i> SOLVED</span>' : ''}
+                                </div>
+                                <div class="dropdown">
+                                    <button class="dropbtn"><i class="fas fa-ellipsis-v"></i></button>
+                                    <div class="dropdown-content">
+                                        <a onclick="openEditTask(${c.originalIdx})"><i class="fas fa-edit"></i> Edit Question</a>
+                                        <a class="danger" onclick="deleteTask(${c.originalIdx})"><i class="fas fa-trash"></i> Delete Question</a>
+                                        <a onclick="showStatus(${c.originalIdx})"><i class="fas fa-info-circle"></i> Check Solve Status</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="font-size:0.9rem; margin:10px 0">${c.desc}</p>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="display:flex; flex-direction:column; gap:6px">
+                                    <span class="timer"><i class="fas fa-clock"></i> ${c.timer}</span>
+                                    <span class="post-time"><i class="far fa-clock"></i> Posted at ${timeStr}</span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:15px">
+                                    <div style="font-size:0.8rem; font-weight:600;">
+                                        <span style="color:var(--success)">${solvedList.length} Solved</span> / 
+                                        <span style="color:var(--danger)">${unsolvedList.length} Unsolved</span>
+                                    </div>
+                                    ${!isSolved ? `<button class="btn-solve-task" onclick="openSolveModal(${c.originalIdx})">Solve Task</button>` : ''}
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    content.innerHTML = html;
+                }
+                adminBar.innerHTML = `<div class="admin-controls"><button class="btn-add-question" onclick="openModal('add-task-modal')"><i class="fas fa-plus-circle"></i> Add Question</button></div>`;
+                adminBar.style.display = 'flex';
+            } else if (tab === 'requests') {
+                content.innerHTML = group.requests.length ? group.requests.map((r, i) => `
+                    <div class="request-card">
+                        <div><b>${r.name}</b> (Points: ${r.points})</div>
+                        <div style="display:flex; gap:10px">
+                            <button class="btn-accept" onclick="actionRequest(${i}, 'accept')">Accept</button>
+                            <button class="btn-decline" onclick="actionRequest(${i}, 'decline')">Decline</button>
+                        </div>
+                    </div>`).join('') : '<p style="text-align:center; padding:20px">No pending requests.</p>';
+            } else if (tab === 'settings') {
+                openModal('edit-group-modal');
+                document.getElementById('edit-name').value = activeGroupName;
+                document.getElementById('edit-desc').value = group.desc;
+            }
+        }
+
+        function openEditTask(idx) {
+            const c = groups[activeGroupName].challenges[idx];
+            document.getElementById('task-modal-title').textContent = "Edit Question";
+            document.getElementById('edit-task-idx').value = idx;
+            document.getElementById('task-title').value = c.title;
+            document.getElementById('task-desc').value = c.desc;
+            document.getElementById('task-timer').value = c.timer.split(':')[0];
+            document.getElementById('btn-save-task').textContent = "Save Changes";
+            openModal('add-task-modal');
+        }
+
+        function saveTask() {
+            const idx = document.getElementById('edit-task-idx').value;
+            const data = {
+                title: document.getElementById('task-title').value,
+                desc: document.getElementById('task-desc').value,
+                timer: document.getElementById('task-timer').value + ":00"
+            };
+
+            if (idx === "") {
+                // New task
+                groups[activeGroupName].challenges.push({
+                    ...data,
+                    solved: [],
+                    timestamp: new Date().toISOString()
+                });
+            } else {
+                // Editing existing task
+                Object.assign(groups[activeGroupName].challenges[idx], data);
+            }
+            saveToStorage();
+            closeModal('add-task-modal'); switchTab('challenges');
+        }
+
+        function deleteTask(idx) {
+            if (confirm("Delete?")) { groups[activeGroupName].challenges.splice(idx, 1); saveToStorage(); switchTab('challenges'); }
+        }
+
+        function showStatus(idx) {
+            const group = groups[activeGroupName];
+            const c = group.challenges[idx];
+            const solvedMembers = group.members.filter(m => c.solved.includes(m.name));
+            const unsolvedMembers = group.members.filter(m => !c.solved.includes(m.name));
+
+            document.getElementById('status-content').innerHTML = `
+                <div style="margin-bottom:15px"><b>Solved (${solvedMembers.length}):</b><div class="status-list">${solvedMembers.map(m => `<div class="status-item"><i class="fas fa-check-circle" style="color:var(--success)"></i> ${m.name}</div>`).join('') || 'None'}</div></div>
+                <div><b>Not Solved (${unsolvedMembers.length}):</b><div class="status-list">${unsolvedMembers.map(m => `<div class="status-item"><i class="fas fa-times-circle" style="color:var(--danger)"></i> ${m.name}</div>`).join('') || 'None'}</div></div>`;
+            openModal('status-modal');
+        }
+
+        function openSolveModal(idx) {
+            const c = groups[activeGroupName].challenges[idx];
+            document.getElementById('solve-task-name').textContent = c.title;
+            document.getElementById('solve-task-idx').value = idx;
+            document.getElementById('pseudo-input').value = "";
+
+            // Start Timer
+            let [mins, secs] = c.timer.split(':').map(Number);
+            let totalSeconds = mins * 60 + secs;
+
+            updateTimerText(totalSeconds);
+
+            solvingTimerInterval = setInterval(() => {
+                totalSeconds--;
+                updateTimerText(totalSeconds);
+
+                if (totalSeconds <= 0) {
+                    clearInterval(solvingTimerInterval);
+                    alert("Time is up! The solver will now close.");
+                    closeModal('solve-modal');
+                }
+            }, 1000);
+
+            openModal('solve-modal');
+        }
+
+        function updateTimerText(total) {
+            let m = Math.floor(total / 60);
+            let s = total % 60;
+            document.getElementById('solving-timer-text').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function cancelSolve() {
+            if (confirm("Are you sure? Your progress will be lost.")) {
+                closeModal('solve-modal');
+            }
+        }
+
+        // Anti-Cheat: Disable Copy/Paste in pseudo editor
+        const pseudoInput = document.getElementById('pseudo-input');
+        pseudoInput.addEventListener('paste', e => { e.preventDefault(); showToast("Pasting is disabled!", "warning"); });
+        pseudoInput.addEventListener('copy', e => { e.preventDefault(); showToast("Copying is disabled!", "warning"); });
+
+        function submitPseudoCode() {
+            const idx = document.getElementById('solve-task-idx').value;
+            const input = document.getElementById('pseudo-input').value;
+            if (input.length < 10) return showToast("Pseudo code too short!", "warning");
+
+            const challenge = groups[activeGroupName].challenges[idx];
+            const user = JSON.parse(localStorage.getItem('codinsta_user')) || { username: 'Aryan' };
+            const username = user.username;
+
+            if (!challenge.solved.includes(username)) {
+                challenge.solved.push(username);
+            }
+            saveToStorage();
+            showToast("Solution Submitted!", "success");
+            closeModal('solve-modal');
+            switchTab('challenges');
+        }
+
+        function makeAdmin(name) {
+            const member = groups[activeGroupName].members.find(m => m.name === name);
+            if (member) { member.role = 'admin'; saveToStorage(); switchTab('members'); }
+        }
+
+        function removeMember(name) {
+            if (confirm(`Remove ${name}?`)) { groups[activeGroupName].members = groups[activeGroupName].members.filter(m => m.name !== name); saveToStorage(); switchTab('members'); }
+        }
+
+        function actionRequest(idx, action) {
+            const req = groups[activeGroupName].requests.splice(idx, 1)[0];
+            if (action === 'accept') groups[activeGroupName].members.push({ name: req.name, role: 'member', points: req.points });
+            saveToStorage();
+            document.getElementById('request-count').textContent = groups[activeGroupName].requests.length;
+            switchTab('requests'); showToast(action === 'accept' ? "User Accepted" : "Request Declined", action === 'accept' ? "success" : "info");
+        }
+
+        function onInvite() {
+            const val = document.getElementById('invite-input').value;
+            if (val) { groups[activeGroupName].members.push({ name: val, role: 'member', points: 0 }); saveToStorage(); closeModal('invite-modal'); switchTab('members'); }
+        }
+
+        function onSaveSettings() {
+            const n = document.getElementById('edit-name').value;
+            const d = document.getElementById('edit-desc').value;
+            const data = groups[activeGroupName]; delete groups[activeGroupName];
+            activeGroupName = n; data.desc = d; groups[n] = data;
+            saveToStorage();
+            selectGroup(n); closeModal('edit-group-modal');
+        }
+
+        renderSidebar(); selectGroup('Algorithm Masters');
+    </script>
+</body>
+
+</html>

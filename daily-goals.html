@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Goals | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .goals-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .goals-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .goal-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .goal-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-set-goal {
+            width: 100%;
+            padding: 14px;
+            background: var(--text-main);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-set-goal:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .progress-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 0%, var(--border) 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .progress-circle::after {
+            content: '';
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 10;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            text-align: center;
+        }
+
+        .progress-text span {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .daily-task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .daily-task-item.completed {
+            border-left-color: var(--success);
+            opacity: 0.8;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .topic-tag {
+            background: #eff6ff;
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .topic-tag i {
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.2s;
+        }
+        .topic-tag i:hover {
+            color: var(--danger);
+        }
+
+        @media (max-width: 768px) {
+            .goals-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="groups.html">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="profile.html" class="btn-login"><i class="fas fa-arrow-left"></i> Back</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="goals-header">
+            <div>
+                <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 5px;"><i class="fas fa-bullseye"></i> Decide Daily Work</h1>
+                <p style="font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Set your daily target and stay consistent to master DS & Algo.</p>
+            </div>
+            <div>
+                <i class="fas fa-calendar-alt" style="font-size: 4rem; opacity: 0.8;"></i>
+            </div>
+        </div>
+
+        <div class="goals-container">
+            <div class="goal-card">
+                <h3><i class="fas fa-tasks"></i> Create Today's Target</h3>
+                <div class="form-group">
+                    <label>Topics Focus (Add multiple)</label>
+                    <div class="tags-input-container" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; border: 1px solid var(--border); border-radius: 10px; background: #fff; align-items: center;">
+                        <span id="topic-tags" style="display: flex; gap: 5px; flex-wrap: wrap;"></span>
+                        <input type="text" id="goal-topic" list="topic-options" placeholder="Type & press Enter..." style="flex: 1; min-width: 150px; border: none; padding: 4px; outline: none; font-size: 0.95rem;">
+                    </div>
+                    <datalist id="topic-options">
+                        <option value="Dynamic Programming"></option>
+                        <option value="Graph Theory"></option>
+                        <option value="Trees & BST"></option>
+                        <option value="Arrays & Strings"></option>
+                        <option value="Linked Lists"></option>
+                        <option value="Stacks & Queues"></option>
+                        <option value="Heaps & Priority Queues"></option>
+                        <option value="Tries"></option>
+                        <option value="Backtracking"></option>
+                        <option value="Greedy Algorithms"></option>
+                        <option value="System Design"></option>
+                        <option value="Bit Manipulation"></option>
+                        <option value="Two Pointers"></option>
+                        <option value="Sliding Window"></option>
+                        <option value="Binary Search"></option>
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label>Number of Questions to Solve</label>
+                    <input type="number" id="goal-count" value="3" min="1" max="10">
+                </div>
+                <button class="btn-set-goal" onclick="setDailyGoal()">Set Target</button>
+            </div>
+
+            <div class="goal-card" style="text-align: center;">
+                <h3><i class="fas fa-chart-pie"></i> Today's Progress</h3>
+                
+                <div class="progress-circle" id="progress-ring">
+                    <div class="progress-text">
+                        <div id="progress-percentage">0%</div>
+                        <span>Completed</span>
+                    </div>
+                </div>
+
+                <div id="task-list" style="text-align: left;">
+                    <p style="color: var(--text-muted); text-align: center;">No goals set for today.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let selectedTopics = ["Dynamic Programming"];
+
+        function loadGoals() {
+            const savedGoal = JSON.parse(localStorage.getItem('codinsta_daily_goal'));
+            const today = new Date().toLocaleDateString();
+
+            if (savedGoal && savedGoal.date === today) {
+                renderTasks(savedGoal);
+            }
+            
+            // Initialize tags UI
+            renderTags();
+        }
+
+        function renderTags() {
+            const container = document.getElementById('topic-tags');
+            container.innerHTML = '';
+            selectedTopics.forEach((topic, index) => {
+                container.insertAdjacentHTML('beforeend', `
+                    <div class="topic-tag">
+                        ${topic} <i class="fas fa-times" onclick="removeTopic(${index})"></i>
+                    </div>
+                `);
+            });
+        }
+
+        function removeTopic(index) {
+            selectedTopics.splice(index, 1);
+            renderTags();
+        }
+
+        // Handle Enter key for tags
+        document.getElementById('goal-topic')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const val = this.value.trim();
+                // Check if it's picking from datalist or just typed
+                if (val && !selectedTopics.includes(val)) {
+                    selectedTopics.push(val);
+                    renderTags();
+                }
+                this.value = '';
+            }
+        });
+
+        // Add tag on change (to catch datalist selection clicks)
+        document.getElementById('goal-topic')?.addEventListener('change', function(e) {
+            const val = this.value.trim();
+            // Since change fires frequently, ensure it resembles an actual topic selection
+            if (val && !selectedTopics.includes(val)) {
+                selectedTopics.push(val);
+                renderTags();
+                this.value = '';
+            }
+        });
+
+        function setDailyGoal() {
+            if(selectedTopics.length === 0) {
+               alert('Please add at least one topic!');
+               return;
+            }
+            
+            const topicsString = selectedTopics.join(", ");
+            const count = parseInt(document.getElementById('goal-count').value);
+            
+            const goalData = {
+                date: new Date().toLocaleDateString(),
+                topic: topicsString,
+                total: count,
+                completed: 0,
+                tasks: Array.from({length: count}, (_, i) => ({ id: i, done: false, title: `Solve a challenge in [${topicsString}]` }))
+            };
+
+            localStorage.setItem('codinsta_daily_goal', JSON.stringify(goalData));
+            renderTasks(goalData);
+            showToast('Daily target set successfully!');
+        }
+
+        function toggleTask(taskId) {
+            const savedGoal = JSON.parse(localStorage.getItem('codinsta_daily_goal'));
+            if (!savedGoal) return;
+
+            savedGoal.tasks[taskId].done = !savedGoal.tasks[taskId].done;
+            savedGoal.completed = savedGoal.tasks.filter(t => t.done).length;
+
+            localStorage.setItem('codinsta_daily_goal', JSON.stringify(savedGoal));
+            renderTasks(savedGoal);
+            
+            if (savedGoal.completed === savedGoal.total) {
+                setTimeout(() => alert("Congratulations! You've hit your daily target! 🎉"), 300);
+            }
+        }
+
+        function renderTasks(goalData) {
+            const listObj = document.getElementById('task-list');
+            listObj.innerHTML = '';
+
+            goalData.tasks.forEach(task => {
+                listObj.insertAdjacentHTML('beforeend', `
+                    <div class="daily-task-item ${task.done ? 'completed' : ''}">
+                        <div style="font-weight: 500; font-size: 0.95rem;">
+                            ${task.title}
+                        </div>
+                        <input type="checkbox" class="task-checkbox" ${task.done ? 'checked' : ''} onchange="toggleTask(${task.id})">
+                    </div>
+                `);
+            });
+
+            const percentage = Math.round((goalData.completed / goalData.total) * 100);
+            document.getElementById('progress-percentage').textContent = percentage + '%';
+            document.getElementById('progress-ring').style.background = `conic-gradient(var(--success) ${percentage}%, var(--border) 0%)`;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadGoals);
+    </script>
+</body>
+</html>

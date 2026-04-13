@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrate Data | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container" style="text-align: center; padding: 50px;">
+        <h1><i class="fas fa-database"></i> Database Migration</h1>
+        <p>Migrating DSA data to Firebase Firestore...</p>
+        <div id="status" style="margin-top: 30px; font-family: monospace; background: #f8fafc; padding: 20px; border-radius: 8px;">
+            Initializing Firebase...
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+
+    <!-- Firebase Initialization -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCb55Qjf5c8PPJyXTs6hHwl2R12Ah0MAck",
+            authDomain: "codinsta-6f27d.firebaseapp.com",
+            databaseURL: "https://codinsta-6f27d-default-rtdb.firebaseio.com",
+            projectId: "codinsta-6f27d",
+            storageBucket: "codinsta-6f27d.firebasestorage.app",
+            messagingSenderId: "791631594202",
+            appId: "1:791631594202:web:d0351251c306c361ae5be3",
+            measurementId: "G-V9LKX8CKK1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+        window.firebaseApp = app;
+    </script>
+
+    <script>
+/**
+ * Firebase Database Migration Script
+ * Run this script to migrate existing DSA data to Firebase Firestore
+ */
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const statusDiv = document.getElementById('status');
+
+    // Wait for Firebase to initialize
+    const checkFirebase = () => {
+        return new Promise((resolve) => {
+            const check = () => {
+                if (window.firebaseDB && window.FirebaseDB && window.FirebaseDB.isInitialized()) {
+                    resolve();
+                } else {
+                    setTimeout(check, 100);
+                }
+            };
+            check();
+        });
+    };
+
+    statusDiv.textContent = 'Waiting for Firebase initialization...';
+    await checkFirebase();
+    statusDiv.textContent = 'Firebase initialized, starting migration...';
+
+    // Import DSA data
+    const dsaData = {
+        'Arrays & Hashing': {
+            icon: 'fas fa-th',
+            color: '#6366f1',
+            desc: 'The foundation of competitive programming. Arrays are contiguous memory blocks, while Hashing provides O(1) average time complexity for lookups and insertions.',
+            overview: 'Mastering Arrays and Hashing is the first step in your DSA journey. You will learn about static and dynamic arrays, how to handle frequency counting, and why hash maps are indispensable for optimizing search operations from O(N) to O(1).',
+            complexity: {
+                time: 'Access: O(1), Search: O(N)/O(1), Insertion: O(N)/O(1)',
+                space: 'O(N) for storage'
+            },
+            concepts: [
+                'Fixed vs Dynamic Arrays',
+                'Hash Functions & Collisions',
+                'Prefix Sums',
+                'Frequency Counting',
+                'Two-Pointer foundations'
+            ],
+            realWorld: 'Used in database indexing, caching systems (LRU Cache), and autocomplete features.',
+            code1: {
+                title: 'Two Sum (Easy)',
+                code: `// Two Sum Solution (C++)
+vector<int> twoSum(vector<int>& nums, int target) {
+    unordered_map<int, int> mp;
+    for(int i=0; i<nums.size(); i++) {
+        // If the complement (target - current) exists in map
+        if(mp.count(target - nums[i]))
+            return {mp[target-nums[i]], i};
+
+        // Store current value and its index
+        mp[nums[i]] = i;
+    }
+    return {};
+}`
+            },
+            code2: {
+                title: 'Valid Anagram (Easy)',
+                code: `// Valid Anagram Solution (C++)
+bool isAnagram(string s, string t) {
+    if(s.size() != t.size()) return false;
+
+    int count[26] = {0};
+    for(int i=0; i<s.size(); i++) {
+        count[s[i]-'a']++;
+        count[t[i]-'a']--;
+    }
+
+    for(int i=0; i<26; i++) {
+        if(count[i] != 0) return false;
+    }
+    return true;
+}`
+            }
+        },
+        'Two Pointers': {
+            icon: 'fas fa-arrows-alt-h',
+            color: '#10b981',
+            desc: 'Efficient technique for searching and manipulating arrays with two indices moving towards each other or in the same direction.',
+            overview: 'Two Pointers is a powerful technique that allows you to solve problems with O(N) time complexity instead of O(N²). Learn how to use two pointers to find pairs, remove duplicates, and solve various array manipulation problems.',
+            complexity: {
+                time: 'O(N) - Linear time',
+                space: 'O(1) - Constant space'
+            },
+            concepts: [
+                'Opposite Direction Two Pointers',
+                'Same Direction Two Pointers',
+                'Sliding Window',
+                'Fast & Slow Pointers',
+                'Multiple Pointers'
+            ],
+            realWorld: 'Used in merge operations, string algorithms, and efficient array processing.',
+            code1: {
+                title: 'Valid Palindrome (Easy)',
+                code: `// Valid Palindrome Solution (C++)
+bool isPalindrome(string s) {
+    int left = 0, right = s.size() - 1;
+
+    while (left < right) {
+        // Skip non-alphanumeric characters
+        while (left < right && !isalnum(s[left])) left++;
+        while (left < right && !isalnum(s[right])) right--;
+
+        // Compare characters (case insensitive)
+        if (tolower(s[left]) != tolower(s[right])) {
+            return false;
+        }
+
+        left++;
+        right--;
+    }
+    return true;
+}`
+            },
+            code2: {
+                title: 'Remove Duplicates from Sorted Array (Easy)',
+                code: `// Remove Duplicates Solution (C++)
+int removeDuplicates(vector<int>& nums) {
+    if (nums.empty()) return 0;
+
+    int i = 0; // Slow pointer
+    for (int j = 1; j < nums.size(); j++) {
+        if (nums[j] != nums[i]) {
+            i++;
+            nums[i] = nums[j];
+        }
+    }
+    return i + 1;
+}`
+            }
+        }
+    };
+
+    // Migrate DSA data to Firebase
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (const [topic, data] of Object.entries(dsaData)) {
+        try {
+            statusDiv.textContent = `Migrating: ${topic}...`;
+            const success = await window.FirebaseDB.saveDSAData(topic, data);
+            if (success) {
+                console.log(`✅ Migrated: ${topic}`);
+                successCount++;
+            } else {
+                console.error(`❌ Failed to migrate: ${topic}`);
+                errorCount++;
+            }
+        } catch (error) {
+            console.error(`❌ Error migrating ${topic}:`, error);
+            errorCount++;
+        }
+    }
+
+    statusDiv.innerHTML = `
+        <h3>Migration completed!</h3>
+        <p>✅ Successful: ${successCount}</p>
+        <p>❌ Failed: ${errorCount}</p>
+        <br>
+        <a href="index.html" class="btn-primary" style="display: inline-block; padding: 12px 24px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px;">Return to Home</a>
+    `;
+
+    if (successCount > 0) {
+        window.showToast(`Migration completed! ${successCount} topics migrated successfully.`, 'success');
+    }
+
+    if (errorCount > 0) {
+        window.showToast(`${errorCount} topics failed to migrate. Check console for details.`, 'error');
+    }
+});
+    </script>
+</body>
+</html>

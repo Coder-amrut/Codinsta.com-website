@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenges | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html" class="active">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="groups.html">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="premium.html" style="color:#d97706; font-weight:700;"><i class="fas fa-crown"></i> Premium</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="login.html" class="btn-login">Login</a>
+            <a href="register.html" class="btn-register">Register</a>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 50px;">
+        <div class="section-header"
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Community Challenges</h1>
+                <p style="color: var(--text-muted)">Solve logic-based missions created by the community.</p>
+            </div>
+            <button class="btn-add-question" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add Question
+            </button>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="challenge-search" placeholder="Search challenges by title or description..."
+                    onkeyup="filterChallenges()">
+            </div>
+            <div class="filter-group">
+                <select id="diff-filter" onchange="filterChallenges()">
+                    <option value="all">All Difficulties</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <select id="cat-filter" onchange="filterChallenges()">
+                    <option value="all">All Categories</option>
+                    <option value="algorithms">Algorithms</option>
+                    <option value="data-structures">Data Structures</option>
+                    <option value="math">Mathematics</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="challenges-grid" id="main-challenges-grid">
+            <!-- Challenges are injected here by JS -->
+        </div>
+    </div>
+
+    <!-- Pseudo Solve Modal -->
+    <div class="modal-overlay" id="pseudo-modal">
+        <div class="modal">
+            <h2 id="pseudo-title">Challenge Title</h2>
+            <p style="margin-bottom: 20px; font-size: 0.9rem;">Write your logic in pseudo-code before time runs out!</p>
+            <div class="modal-timer" id="pseudo-timer">00:00</div>
+            <textarea id="pseudo-text" class="pseudo-editor"
+                placeholder="BEGIN&#10;  // Your logic here&#10;END"></textarea>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closePseudoModal()">Give Up</button>
+                <button class="btn-submit-pseudo" onclick="submitPseudo()">Submit Logic</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Question Modal -->
+    <div class="modal-overlay" id="add-modal">
+        <div class="modal" style="max-width: 600px;">
+            <h2>Create New Challenge</h2>
+            <p style="margin-bottom: 25px; font-size: 0.9rem;">Expand the community knowledge with your mission.</p>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Question Title</label>
+                <input type="text" id="new-title"
+                    style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;"
+                    placeholder="e.g. Reverse Linked List">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Question Bio / Description</label>
+                <textarea id="new-bio"
+                    style="width: 100%; height: 100px; padding: 10px; border: 1px solid var(--border); border-radius: 8px;"
+                    placeholder="Describe the challenge rules and logic..."></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Programming Languages</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                        <label><input type="checkbox" name="langs" value="Java"> Java</label>
+                        <label><input type="checkbox" name="langs" value="Python"> Python</label>
+                        <label><input type="checkbox" name="langs" value="C"> C</label>
+                        <label><input type="checkbox" name="langs" value="CPP"> C++</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Time Limit (Minutes)</label>
+                    <input type="number" id="new-time"
+                        style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;"
+                        placeholder="5">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Difficulty</label>
+                    <select id="new-diff"
+                        style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Category</label>
+                    <select id="new-cat"
+                        style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px;">
+                        <option value="algorithms">Algorithms</option>
+                        <option value="data-structures">Data Structures</option>
+                        <option value="math">Mathematics</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn-cancel" onclick="closeAddModal()"
+                    style="padding: 10px 20px; background: #f1f5f9; border-radius: 8px;">Discard</button>
+                <button class="btn-submit-pseudo" onclick="saveNewQuestion()"
+                    style="padding: 10px 20px; background: var(--primary); color: white; border-radius: 8px; font-weight: 700;">Post
+                    Question</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fas fa-code"></i>
+                        CodInsta<span>.com</span>
+                    </div>
+                    <p>India's premier logical coding platform. Empowering developers.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodInsta - All Rights Reserved.</p>
+                <p>Created by <strong>Amrutkiran Kshirsagar</strong></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        let pseudoTimer;
+        let timeLeft;
+        let activeQuestionId;
+        let editModeId = null;
+
+        const featuredQuestions = [
+            { id: 'feat-1', title: 'Reverse a String', bio: 'Implement an algorithm to reverse a given string without using built-in reverse functions.', languages: ['Java', 'Python', 'C++'], time: '5:00', diff: 'easy', cat: 'algorithms', author: 'Admin', solvedCount: '1.2k' },
+            { id: 'feat-2', title: 'Palindrome Number', bio: 'Determine whether an integer is a palindrome. Reads the same backward as forward.', languages: ['Python', 'C++'], time: '8:00', diff: 'medium', cat: 'math', author: 'Amrut', solvedCount: '850' },
+            { id: 'feat-3', title: 'Median of Two Sorted Arrays', bio: 'Given two sorted arrays, find the median of the combined sorted array in O(log(m+n)) time.', languages: ['C++', 'Java'], time: '15:00', diff: 'hard', cat: 'data-structures', author: 'LogicExp', solvedCount: '230' },
+            { id: 'feat-4', title: 'FizzBuzz Challenge', bio: 'Print numbers from 1 to N. For multiples of 3, print "Fizz", for multiples of 5, "Buzz".', languages: ['C', 'Java', 'Python'], time: '3:00', diff: 'easy', cat: 'algorithms', author: 'CodeMaster', solvedCount: '2.1k' },
+            { id: 'feat-5', title: 'Valid Parentheses', bio: 'Determine if the input string containing brackets is valid. Brackets must close in correct order.', languages: ['Java', 'C++'], time: '10:00', diff: 'medium', cat: 'data-structures', author: 'DevHero', solvedCount: '540' },
+            { id: 'feat-6', title: 'Find Max in Array', bio: 'Write a function that finds the largest element in an unsorted integer array.', languages: ['C', 'Python'], time: '4:00', diff: 'easy', cat: 'algorithms', author: 'NoobCoder', solvedCount: '3.4k' },
+            { id: 'feat-7', title: 'N-Queens Problem', bio: 'Place n queens on an n×n chessboard such that no two queens attack each other.', languages: ['Java', 'C++'], time: '25:00', diff: 'hard', cat: 'algorithms', author: 'Guru', solvedCount: '112' },
+            { id: 'feat-8', title: 'Binary Tree Inorder', bio: 'Given the root of a binary tree, return the inorder traversal of its nodes values.', languages: ['C++', 'Java'], time: '12:00', diff: 'medium', cat: 'data-structures', author: 'Thinker', solvedCount: '720' },
+            { id: 'feat-9', title: 'Two Sum Problem', bio: 'Find two numbers in an array that add up to a specific target sum.', languages: ['Python', 'Java', 'C++'], time: '7:00', diff: 'easy', cat: 'algorithms', author: 'FastFlow', solvedCount: '1.8k' },
+            { id: 'feat-10', title: 'LRU Cache Design', bio: 'Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.', languages: ['Java', 'C++'], time: '30:00', diff: 'hard', cat: 'data-structures', author: 'Archi', solvedCount: '95' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChallenges();
+        });
+
+        function renderChallenges() {
+            const user = JSON.parse(localStorage.getItem('codinsta_user')) || { username: 'Guest' };
+            const customQs = JSON.parse(localStorage.getItem('codinsta_custom_qs')) || [];
+            // Create a copy before reversing to prevent any unexpected behavior
+            const allChallenges = [...[...customQs].reverse(), ...featuredQuestions];
+
+            const searchTerm = (document.getElementById('challenge-search')?.value || '').toLowerCase();
+            const diffFilter = document.getElementById('diff-filter')?.value || 'all';
+            const catFilter = document.getElementById('cat-filter')?.value || 'all';
+
+            const grid = document.getElementById('main-challenges-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const filtered = allChallenges.filter(q => {
+                const qTitle = (q.title || '').toLowerCase();
+                const qBio = (q.bio || '').toLowerCase();
+                const matchesSearch = qTitle.includes(searchTerm) || qBio.includes(searchTerm);
+                const matchesDiff = diffFilter === 'all' || q.diff === diffFilter;
+                const matchesCat = catFilter === 'all' || q.cat === catFilter;
+                return matchesSearch && matchesDiff && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-muted);">
+                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; display: block;"></i>
+                    <p>No challenges found matching your filters.</p>
+                </div>`;
+                return;
+            }
+
+            const bookmarks = JSON.parse(localStorage.getItem('codinsta_bookmarks')) || [];
+
+            filtered.forEach(q => {
+                const isOwner = q.author === user.username && !q.id.startsWith('feat-');
+                const isAuthorPremium = q.isPremium || (isOwner && localStorage.getItem('codinsta_premium') === 'true');
+                const isBookmarked = bookmarks.includes(q.id);
+                const cardHtml = `
+                    <div class="card challenge-card" id="card-${q.id}" style="position: relative;">
+                        <button class="btn-bookmark" onclick="toggleBookmark('${q.id}')" style="position: absolute; right: 15px; top: 15px; z-index: 10; background: none; border: none; font-size: 1.3rem; cursor: pointer; color: ${isBookmarked ? '#FFD700' : 'var(--text-muted)'}; transition: transform 0.2s;">
+                            <i class="${isBookmarked ? 'fas' : 'far'} fa-bookmark"></i>
+                        </button>
+                        ${isOwner ? `
+                        <div class="card-actions" style="right: 50px;">
+                            <button class="action-btn btn-edit-action" title="Edit Mission" onclick="openEditModal('${q.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn btn-delete-action" title="Delete Mission" onclick="deleteQuestion('${q.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        ` : ''}
+                        <div class="difficulty" style="display: flex; align-items: center; justify-content: space-between;">
+                            <span class="badge badge-${q.diff}">${q.diff.charAt(0).toUpperCase() + q.diff.slice(1)}</span>
+                            <span id="status-${q.id}"></span>
+                        </div>
+                        <div class="card-meta">
+                            <div class="author-info" style="cursor: pointer;" onclick="window.location.href='profile.html?u=${q.author}'">
+                                <img src="https://i.pravatar.cc/100?u=${q.author}" alt="${q.author}">
+                                <span>${q.author}${isAuthorPremium ? ' <i class="fas fa-crown" style="color: #FFD700; margin-left: 4px;" title="Premium Member"></i>' : ''}</span>
+                            </div>
+                            <div class="solved-count">
+                                <i class="fas fa-users"></i> <span id="solved-count-${q.id}">${q.solvedCount || 0}</span> Solved
+                            </div>
+                        </div>
+                        <h3>${q.title}</h3>
+                        <p>${q.bio}</p>
+                        <div class="card-footer">
+                            <div class="languages">
+                                ${q.languages.map(l => `<span class="lang-icon">${l}</span>`).join('')}
+                            </div>
+                            <button class="btn-solve" onclick="openPseudoModal('${q.title.replace(/'/g, "\\'")}', '${q.time}', '${q.id}')">Solve</button>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            const solved = JSON.parse(localStorage.getItem('codinsta_solved')) || [];
+            solved.forEach(id => markAsSolved(id));
+        }
+
+        function filterChallenges() {
+            renderChallenges();
+        }
+
+        window.toggleBookmark = function(id) {
+            let bookmarks = JSON.parse(localStorage.getItem('codinsta_bookmarks')) || [];
+            if (bookmarks.includes(id)) {
+                bookmarks = bookmarks.filter(bId => bId !== id);
+                showToast('Removed from Bookmarks');
+            } else {
+                bookmarks.push(id);
+                showToast('Added to Bookmarks');
+            }
+            localStorage.setItem('codinsta_bookmarks', JSON.stringify(bookmarks));
+            renderChallenges();
+        }
+
+        function markAsSolved(id) {
+            const card = document.getElementById('card-' + id);
+            const status = document.getElementById('status-' + id);
+            if (card && status) {
+                card.classList.add('solved');
+                status.innerHTML = `<span class="solved-badge"><i class="fas fa-check-circle"></i> SOLVED</span>`;
+                const btn = card.querySelector('.btn-solve');
+                if (btn) btn.textContent = "Solved ✓";
+            }
+        }
+
+        function openPseudoModal(title, time, id) {
+            activeQuestionId = id;
+            document.getElementById('pseudo-title').textContent = title;
+            document.getElementById('pseudo-modal').style.display = 'flex';
+            document.getElementById('pseudo-text').value = '';
+
+            const parts = time.split(':').map(Number);
+            timeLeft = parts[0] * 60 + (parts[1] || 0);
+            updateTimerDisplay();
+
+            clearInterval(pseudoTimer);
+            pseudoTimer = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(pseudoTimer);
+                    alert("Time is up!");
+                    closePseudoModal();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            const timerEl = document.getElementById('pseudo-timer');
+            if (timerEl) timerEl.textContent = `${m}:${s}`;
+        }
+
+        function closePseudoModal() {
+            document.getElementById('pseudo-modal').style.display = 'none';
+            clearInterval(pseudoTimer);
+        }
+
+        function submitPseudo() {
+            const logic = document.getElementById('pseudo-text').value.trim();
+            if (logic.length < 20) {
+                alert("Please write more detailed logic!");
+                return;
+            }
+
+            clearInterval(pseudoTimer);
+            alert("Logic Submitted! Our moderators will review it.");
+            closePseudoModal();
+
+            const solved = JSON.parse(localStorage.getItem('codinsta_solved')) || [];
+            if (!solved.includes(activeQuestionId)) {
+                solved.push(activeQuestionId);
+                localStorage.setItem('codinsta_solved', JSON.stringify(solved));
+                markAsSolved(activeQuestionId);
+
+                const customQs = JSON.parse(localStorage.getItem('codinsta_custom_qs')) || [];
+                const qIdx = customQs.findIndex(q => q.id === activeQuestionId);
+                if (qIdx !== -1) {
+                    customQs[qIdx].solvedCount = (parseInt(customQs[qIdx].solvedCount) || 0) + 1;
+                    localStorage.setItem('codinsta_custom_qs', JSON.stringify(customQs));
+                    const countSpan = document.getElementById('solved-count-' + activeQuestionId);
+                    if (countSpan) countSpan.textContent = customQs[qIdx].solvedCount;
+                }
+            }
+
+            const user = JSON.parse(localStorage.getItem('codinsta_user')) || { username: 'Guest' };
+            user.points = (user.points || 0) + 5;
+            localStorage.setItem('codinsta_user', JSON.stringify(user));
+        }
+
+        function openAddModal() {
+            editModeId = null;
+            document.querySelector('#add-modal h2').textContent = "Create New Challenge";
+            document.querySelector('#add-modal button.btn-submit-pseudo').textContent = "Post Question";
+
+            // Clear inputs
+            document.getElementById('new-title').value = '';
+            document.getElementById('new-bio').value = '';
+            document.getElementById('new-time').value = '';
+            document.querySelectorAll('input[name="langs"]').forEach(el => el.checked = false);
+
+            document.getElementById('add-modal').style.display = 'flex';
+        }
+
+        function openEditModal(id) {
+            editModeId = id;
+            const customQs = JSON.parse(localStorage.getItem('codinsta_custom_qs')) || [];
+            const q = customQs.find(item => item.id === id);
+
+            if (!q) return;
+
+            document.querySelector('#add-modal h2').textContent = "Edit Challenge";
+            document.querySelector('#add-modal button.btn-submit-pseudo').textContent = "Save Changes";
+
+            document.getElementById('new-title').value = q.title;
+            document.getElementById('new-bio').value = q.bio;
+            document.getElementById('new-time').value = q.time.split(':')[0];
+            document.getElementById('new-diff').value = q.diff;
+            document.getElementById('new-cat').value = q.cat;
+
+            const checkboxes = document.querySelectorAll('input[name="langs"]');
+            checkboxes.forEach(cb => {
+                cb.checked = q.languages.includes(cb.value);
+            });
+
+            document.getElementById('add-modal').style.display = 'flex';
+        }
+
+        function closeAddModal() {
+            document.getElementById('add-modal').style.display = 'none';
+        }
+
+        function saveNewQuestion() {
+            const title = document.getElementById('new-title').value.trim();
+            const bio = document.getElementById('new-bio').value.trim();
+            const timeVal = document.getElementById('new-time').value.trim();
+            const diff = document.getElementById('new-diff').value;
+            const cat = document.getElementById('new-cat').value;
+            const checkedLangs = Array.from(document.querySelectorAll('input[name="langs"]:checked')).map(el => el.value);
+
+            if (!title || !bio || !timeVal || checkedLangs.length === 0) {
+                alert("Please fill all fields and select at least one language!");
+                return;
+            }
+
+            const customQs = JSON.parse(localStorage.getItem('codinsta_custom_qs')) || [];
+
+            if (editModeId) {
+                // Edit existing
+                const qIdx = customQs.findIndex(item => item.id === editModeId);
+                if (qIdx !== -1) {
+                    customQs[qIdx].title = title;
+                    customQs[qIdx].bio = bio;
+                    customQs[qIdx].time = timeVal + ':00';
+                    customQs[qIdx].diff = diff;
+                    customQs[qIdx].cat = cat;
+                    customQs[qIdx].languages = checkedLangs;
+                    localStorage.setItem('codinsta_custom_qs', JSON.stringify(customQs));
+                }
+            } else {
+                // Create new
+                const user = JSON.parse(localStorage.getItem('codinsta_user')) || { username: 'Guest' };
+                const newId = 'q-' + Date.now();
+                const q = {
+                    id: newId,
+                    title,
+                    bio,
+                    languages: checkedLangs,
+                    time: timeVal + ':00',
+                    diff,
+                    cat,
+                    author: user.username,
+                    isPremium: localStorage.getItem('codinsta_premium') === 'true',
+                    solvedCount: 0
+                };
+                customQs.push(q);
+                localStorage.setItem('codinsta_custom_qs', JSON.stringify(customQs));
+            }
+
+            closeAddModal();
+            renderChallenges();
+        }
+
+        function deleteQuestion(id) {
+            if (!confirm("Are you sure you want to delete this mission? This cannot be undone.")) return;
+
+            let customQs = JSON.parse(localStorage.getItem('codinsta_custom_qs')) || [];
+            customQs = customQs.filter(q => q.id !== id);
+            localStorage.setItem('codinsta_custom_qs', JSON.stringify(customQs));
+
+            renderChallenges();
+        }
+    </script>
+</body>
+
+</html>

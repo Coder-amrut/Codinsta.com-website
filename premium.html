@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodInsta Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .premium-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .premium-hero {
+            margin-bottom: 60px;
+            animation: fadeInPage 0.8s ease-out;
+        }
+
+        .premium-hero h1 {
+            font-size: 3.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0px 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .premium-hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .pricing-card {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 40px 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
+        }
+
+        .pricing-card.elite {
+            border: 2px solid #FFD700;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            color: white;
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.elite:hover {
+            transform: translateY(-15px) scale(1.08);
+            box-shadow: 0 25px 50px rgba(255, 215, 0, 0.3);
+        }
+
+        .pricing-card.elite p,
+        .pricing-card.elite ul li {
+            color: #e2e8f0;
+        }
+
+        .pricing-card.elite .price {
+            color: #FFD700;
+        }
+
+        .badge-most-popular {
+            position: absolute;
+            top: 15px;
+            right: -35px;
+            background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+            color: #000;
+            padding: 5px 40px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            transform: rotate(45deg);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+        }
+
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 20px 0;
+            color: var(--text-main);
+        }
+
+        .price span {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 30px 0;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+        }
+
+        .features-list li i {
+            color: var(--success);
+            font-size: 1.2rem;
+        }
+
+        .pricing-card.elite .features-list li i {
+            color: #FFD700;
+        }
+
+        .btn-subscribe {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+
+        .btn-plan-basic {
+            background: #f1f5f9;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-plan-basic:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-plan-elite {
+            background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
+            color: #000;
+            border: none;
+        }
+
+        .btn-plan-elite:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* Modal */
+        .premium-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .premium-modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success);
+            margin-bottom: 20px;
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .premium-modal-content h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .premium-modal-content p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="challenges.html">Challenges</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="groups.html">Groups</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="premium.html" class="active" style="color:#d97706; font-weight:700;"><i class="fas fa-crown"></i>
+                Premium</a>
+        </nav>
+        <div class="auth-btns">
+            <a href="login.html" class="btn-login">Login</a>
+            <a href="register.html" class="btn-register">Register</a>
+        </div>
+    </header>
+
+    <div class="premium-container">
+        <div class="premium-hero">
+            <h1>Unlock Your True Potential</h1>
+            <p>Upgrade to CodInsta Premium to access exclusive challenges, advanced DSA guides, private groups, and
+                priority support.</p>
+        </div>
+
+        <div class="pricing-grid">
+            <!-- Basic Plan -->
+            <div class="pricing-card">
+                <h3 class="plan-name">Pro Coder</h3>
+                <p>Perfect for intermediate developers aiming higher.</p>
+                <div class="price">$9<span>/mo</span></div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Access all public challenges</li>
+                    <li><i class="fas fa-check-circle"></i> Basic DSA Guides</li>
+                    <li><i class="fas fa-check-circle"></i> Create up to 2 groups</li>
+                    <li><i class="fas fa-check-circle"></i> Community Support</li>
+                </ul>
+                <button class="btn-subscribe btn-plan-basic" onclick="showSuccessModal('Pro Coder')">Choose Pro</button>
+            </div>
+
+            <!-- Elite Plan -->
+            <div class="pricing-card elite">
+                <div class="badge-most-popular">Most Popular</div>
+                <h3 class="plan-name">CodInsta Elite <i class="fas fa-crown"></i></h3>
+                <p>The ultimate toolkit for crushing tech interviews.</p>
+                <div class="price">$19<span>/mo</span></div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Unlimited Private Challenges</li>
+                    <li><i class="fas fa-check-circle"></i> Premium Video DSA Guides</li>
+                    <li><i class="fas fa-check-circle"></i> Unlimited Groups & Invites</li>
+                    <li><i class="fas fa-check-circle"></i> Exclusive Elite Badge</li>
+                    <li><i class="fas fa-check-circle"></i> 1-on-1 Mentor Support</li>
+                </ul>
+                <button class="btn-subscribe btn-plan-elite"
+                    onclick="showSuccessModal('Elite <i class=\'fas fa-crown\'></i>')">Upgrade to Elite</button>
+            </div>
+
+            <!-- Lifetime Plan -->
+            <div class="pricing-card">
+                <h3 class="plan-name">Lifetime Access</h3>
+                <p>One-time payment. Yours forever.</p>
+                <div class="price">$199<span>/flat</span></div>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> All Elite Features Included</li>
+                    <li><i class="fas fa-check-circle"></i> Early Access to New Features</li>
+                    <li><i class="fas fa-check-circle"></i> Special Lifetime Badge</li>
+                    <li><i class="fas fa-check-circle"></i> No Recurring Fees</li>
+                </ul>
+                <button class="btn-subscribe btn-plan-basic" onclick="showSuccessModal('Lifetime Setup')">Get
+                    Lifetime</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="premium-modal" id="successModal">
+        <div class="premium-modal-content">
+            <i class="fas fa-times close-modal" onclick="closeModal()"></i>
+            <i class="fas fa-check-circle success-icon"></i>
+            <h3>Welcome to Premium!</h3>
+            <p>You have successfully unlocked the <strong id="planNameDisplay"></strong> plan. Explore CodInsta to the
+                fullest.</p>
+            <button class="btn-subscribe btn-plan-elite" onclick="window.location.href='premium-hub.html'"
+                style="margin-top: 20px;">Start Coding Now</button>
+        </div>
+    </div>
+
+    <script>
+        function showSuccessModal(planName) {
+            document.getElementById('planNameDisplay').innerHTML = planName;
+            document.getElementById('successModal').style.display = 'flex';
+            localStorage.setItem('codinsta_premium', 'true');
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('successModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+
+</html>

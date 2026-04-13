@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | CodInsta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 100px 20px 40px;
+            /* Space for sticky header + footer margin */
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .auth-card {
+            padding: 40px;
+        }
+
+        .auth-card h2 {
+            margin-bottom: 8px;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .auth-card p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group.full {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input,
+        .input-wrapper textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .input-wrapper textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        .input-wrapper input:focus,
+        .input-wrapper textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            grid-column: span 2;
+        }
+
+        .btn-auth:hover {
+            background: var(--primary-hover);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .error-msg {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
+            /* Hidden by default */
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: span 1;
+            }
+
+            .btn-auth {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-code"></i>
+            CodInsta<span>.com</span>
+        </div>
+        <div class="auth-btns">
+            <a href="login.html" class="btn-login">Login</a>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="card auth-card">
+            <h2>Create Account</h2>
+            <p>Join the community of student developers today.</p>
+
+            <div id="error-box" class="error-msg"></div>
+
+            <form id="register-form" class="form-grid">
+                <div class="form-group">
+                    <label>Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="johndoe" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" placeholder="john@example.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <div class="input-wrapper">
+                        <input type="tel" placeholder="+1 (555) 000-0000" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Technology Stack</label>
+                    <div class="input-wrapper">
+                        <input type="text" placeholder="Java, Python, JS">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <div class="form-group full">
+                    <label>Bio (Short Description)</label>
+                    <div class="input-wrapper">
+                        <textarea placeholder="Tell us about your coding interests..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-auth">Create Free Account</button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="login.html">Log in</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    
+    <!-- Firebase Initialization -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCb55Qjf5c8PPJyXTs6hHwl2R12Ah0MAck",
+            authDomain: "codinsta-6f27d.firebaseapp.com",
+            databaseURL: "https://codinsta-6f27d-default-rtdb.firebaseio.com",
+            projectId: "codinsta-6f27d",
+            storageBucket: "codinsta-6f27d.firebasestorage.app",
+            messagingSenderId: "791631594202",
+            appId: "1:791631594202:web:d0351251c306c361ae5be3",
+            measurementId: "G-V9LKX8CKK1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+        window.firebaseApp = app;
+    </script>
+    
+    <script type="module">
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorBox = document.getElementById('error-box');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+
+            const username = e.target.querySelector('input[placeholder="johndoe"]').value;
+            const email = e.target.querySelector('input[type="email"]').value;
+            const passwords = e.target.querySelectorAll('input[type="password"]');
+            const password = passwords[0].value;
+            const confirmPassword = passwords[1].value;
+            const bio = e.target.querySelector('textarea').value;
+
+            if (!username || !email || !password) {
+                errorBox.textContent = 'Please fill in all required fields';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorBox.textContent = 'Password must be at least 6 characters long';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorBox.textContent = 'Passwords do not match';
+                errorBox.style.display = 'block';
+                return;
+            }
+
+            // Show loading state
+            submitBtn.textContent = 'Creating account...';
+            submitBtn.disabled = true;
+            errorBox.style.display = 'none';
+
+            try {
+                // Create user with Firebase Auth
+                const userCredential = await createUserWithEmailAndPassword(window.firebaseAuth, email, password);
+                const user = userCredential.user;
+
+                // Save user data to Firestore
+                const userData = {
+                    username: username,
+                    email: email,
+                    bio: bio || '',
+                    points: 0,
+                    solved: 0,
+                    uid: user.uid
+                };
+
+                const success = await window.FirebaseDB.saveUser(userData);
+
+                if (success) {
+                    // Save to localStorage for session
+                    localStorage.setItem('codinsta_user', JSON.stringify(userData));
+
+                    window.showToast('Account created successfully!', 'success');
+                    window.location.href = 'index.html';
+                } else {
+                    throw new Error('Failed to save user data');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                let errorMessage = 'Registration failed. Please try again.';
+
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'An account with this email already exists.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Invalid email address.';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Password is too weak.';
+                }
+
+                errorBox.textContent = errorMessage;
+                errorBox.style.display = 'block';
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

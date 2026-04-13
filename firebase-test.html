@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>Firebase Connection Test</h1>
+    <div id="status" class="status info">Testing Firebase connection...</div>
+    <div id="details"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyARdJta-TbLqvvsMm6rHO5HXrZRM0Kuef8",
+            authDomain: "codinteger.firebaseapp.com",
+            projectId: "codinteger",
+            storageBucket: "codinteger.firebasestorage.app",
+            messagingSenderId: "1098148707264",
+            appId: "1:1098148707264:web:bd45a3a5b5c8035e7ba625",
+            measurementId: "G-4DQ5K77HZS"
+        };
+
+        const statusDiv = document.getElementById('status');
+        const detailsDiv = document.getElementById('details');
+
+        try {
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+
+            statusDiv.textContent = 'Firebase initialized successfully!';
+            statusDiv.className = 'status success';
+
+            detailsDiv.innerHTML = `
+                <p><strong>Project ID:</strong> ${firebaseConfig.projectId}</p>
+                <p><strong>Auth Domain:</strong> ${firebaseConfig.authDomain}</p>
+                <p><strong>Firestore:</strong> Connected</p>
+            `;
+
+            // Test Firestore connection
+            const testCollection = collection(db, 'dsa-topics');
+            getDocs(testCollection).then(snapshot => {
+                detailsDiv.innerHTML += `<p><strong>Database Test:</strong> Successfully connected to Firestore (${snapshot.size} documents found)</p>`;
+            }).catch(error => {
+                detailsDiv.innerHTML += `<p><strong>Database Test:</strong> Error - ${error.message}</p>`;
+                statusDiv.textContent = 'Firebase initialized but database connection failed!';
+                statusDiv.className = 'status error';
+            });
+
+        } catch (error) {
+            statusDiv.textContent = 'Firebase initialization failed!';
+            statusDiv.className = 'status error';
+            detailsDiv.innerHTML = `<p><strong>Error:</strong> ${error.message}</p>`;
+        }
+    </script>
+</body>
+</html>
