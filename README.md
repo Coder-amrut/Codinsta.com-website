@@ -73,6 +73,11 @@ An interactive coding platform 💻 where students can learn, practice, and comp
 - ⚡ JavaScript  
 
 ---
+## 👨‍💻 Author
+
+**Amrut Kiran**
+📧 Email: [amrutkiranskshirsagar@gmail.com]
+🔗 GitHub: https://github.com/coder-amrut
 
 ## 🚀 Getting Started
 
